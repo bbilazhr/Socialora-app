@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { init } from './db.js';
+import { init, q } from './db.js';
 import authRoutes from './routes/auth.js';
 import brandRoutes from './routes/brands.js';
 import userRoutes from './routes/users.js';
@@ -32,6 +32,38 @@ app.use(cors({
 
 app.use(express.json({ limit: '5mb' }));
 
+// Health check (always available)
+app.get('/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
+app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
+
+// Diagnostic / Test endpoint to verify environment variables and database status
+const testHandler = async (_req, res) => {
+  const env = {
+    DATABASE_URL: !!process.env.DATABASE_URL,
+    JWT_SECRET: !!process.env.JWT_SECRET,
+    ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
+    VERCEL: !!process.env.VERCEL,
+  };
+  let db = 'unknown';
+  let dbError = null;
+  try {
+    const r = await q('SELECT count(*) FROM users');
+    db = `connected (users count: ${r.rows[0].count})`;
+  } catch (err) {
+    db = 'failed';
+    dbError = err.message;
+  }
+  res.json({
+    ok: db !== 'failed' && env.DATABASE_URL && env.JWT_SECRET && env.ADMIN_PASSWORD,
+    time: new Date().toISOString(),
+    env,
+    database: db,
+    dbError,
+  });
+};
+app.get('/test', testHandler);
+app.get('/api/test', testHandler);
+
 // Lazy DB initialization helper
 let initPromise = null;
 export function ensureInit() {
@@ -44,10 +76,6 @@ export function ensureInit() {
   }
   return initPromise;
 }
-
-// Health check (always available)
-app.get('/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
-app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
 
 // Middleware to check required env variables and ensure DB is ready
 app.use(async (_req, res, next) => {
@@ -83,8 +111,9 @@ app.use('/api', insightRoutes);
 app.use('/', insightRoutes);
 
 app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(500).json({ error: err.message || 'Terjadi kesalahan di server' });
+  console.error('API Error:', err);
+  const msg = err && (err.message || (typeof err === 'string' ? err : 'Terjadi kesalahan di server'));
+  res.status(500).json({ error: msg || 'Terjadi kesalahan di server' });
 });
 
 // Run standalone server when not in Vercel Serverless

@@ -3,15 +3,30 @@ import pg from 'pg';
 pg.types.setTypeParser(20, (v) => Number(v)); // BIGINT -> number
 pg.types.setTypeParser(1082, (v) => v); // DATE -> 'YYYY-MM-DD' (tanpa geser timezone)
 
-const url = process.env.DATABASE_URL || '';
-const isLocal = /localhost|127\.0\.0\.1/.test(url);
+let poolInstance = null;
 
-export const pool = new pg.Pool({
-  connectionString: url,
-  ssl: isLocal ? false : { rejectUnauthorized: false },
-});
+export function getPool() {
+  if (!poolInstance) {
+    const url = process.env.DATABASE_URL || '';
+    const isLocal = /localhost|127\.0\.0\.1/.test(url);
+    poolInstance = new pg.Pool({
+      connectionString: url,
+      ssl: isLocal ? false : { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000,
+    });
+    poolInstance.on('error', (err) => {
+      console.error('Unexpected pool error:', err);
+    });
+  }
+  return poolInstance;
+}
 
-export const q = (text, params) => pool.query(text, params);
+export const q = (text, params) => getPool().query(text, params);
+
+export const pool = {
+  query: (t, p) => getPool().query(t, p),
+  end: () => poolInstance && poolInstance.end(),
+};
 
 export async function insertRow(table, data) {
   const k = Object.keys(data);

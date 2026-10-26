@@ -24,13 +24,21 @@ async function req(path, { method = 'GET', body } = {}) {
   } catch {
     throw new Error('Tidak bisa terhubung ke server. Pastikan backend sudah berjalan.');
   }
+
   // Parse response
   let data = {};
   const text = await res.text();
   try {
     data = JSON.parse(text);
   } catch {
-    data = { error: text && text.length < 200 ? text : 'Terjadi kesalahan di server' };
+    // If response is HTML or plain text, extract readable text
+    const clean = text
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    data = { error: clean ? clean.slice(0, 200) : `Error server (${res.status})` };
   }
 
   if (res.status === 401 && token) {
