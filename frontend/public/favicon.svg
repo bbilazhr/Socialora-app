@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><path d="M42 22c-2-4-6-6-10-6-6 0-10 3-10 8 0 12 20 6 20 16 0 5-4 8-10 8-5 0-9-2-11-6" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fe3f51" />
+      <stop offset="100%" stop-color="#fa7e8d" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#ffffff" />
+  <rect x="7" y="19" width="50" height="26" rx="13" fill="none" stroke="#18181b" stroke-width="4.5" />
+  <rect x="12" y="24" width="40" height="16" rx="8" fill="url(#pinkGrad)" />
+</svg>

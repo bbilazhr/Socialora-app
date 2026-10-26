@@ -48,7 +48,7 @@ export default function Register() {
   return (
     <div className="login-page">
       <form className="login-card" onSubmit={submit}>
-        <div className="login-logo"><Logo size={56} /></div>
+        <div className="login-logo"><Logo size={46} /></div>
         <h1>Daftar Akun</h1>
         <p className="muted">Buat akun Socialora baru untuk mulai mengelola konten</p>
 
@@ -151,7 +151,7 @@ export default function Register() {
 
         <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>
           Sudah punya akun?{' '}
-          <Link to="/login" style={{ color: '#7c1fe0', fontWeight: 600 }}>
+          <Link to="/login" style={{ color: '#fe3f51', fontWeight: 600 }}>
             Masuk di sini
           </Link>
         </div>

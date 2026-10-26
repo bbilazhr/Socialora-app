@@ -35,7 +35,7 @@ export default function Layout() {
       <button className="mobile-toggle" onClick={() => setSide(!side)} aria-label="Menu"><Menu size={20} /></button>
       <aside className={`sidebar ${side ? 'open' : ''}`}>
         <div className="side-top">
-          <div className="logo-row"><Logo size={34} /><span>Socialora</span></div>
+          <div className="logo-row"><Logo size={28} /></div>
           <p className="welcome">Welcome, <b>{user.name}</b> · <span className="role-pill">{user.role}</span></p>
 
           <div className="brand-switch">

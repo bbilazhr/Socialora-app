@@ -5,18 +5,43 @@ import { useBrand } from '../BrandContext.jsx';
 import { useAuth } from '../AuthContext.jsx';
 import { MONTHS } from '../utils.js';
 
-export function Logo({ size = 36 }) {
+export function Logo({ size = 36, variant = 'full', className = '', style = {}, ...props }) {
+  if (variant === 'mark' || variant === 'icon') {
+    return (
+      <img
+        src="/logo-mark.png"
+        alt="Socialora"
+        height={size}
+        className={`brand-logo-mark ${className}`}
+        style={{
+          height: `${size}px`,
+          width: 'auto',
+          objectFit: 'contain',
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          ...style,
+        }}
+        {...props}
+      />
+    );
+  }
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-label="Socialora">
-      <defs>
-        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7c3aed" />
-          <stop offset="1" stopColor="#2563eb" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="16" fill="url(#lg)" />
-      <path d="M42 22c-2-4-6-6-10-6-6 0-10 3-10 8 0 12 20 6 20 16 0 5-4 8-10 8-5 0-9-2-11-6" fill="none" stroke="#fff" strokeWidth="6" strokeLinecap="round" />
-    </svg>
+    <img
+      src="/logo.png"
+      alt="Socialora"
+      height={size}
+      className={`brand-logo ${className}`}
+      style={{
+        height: `${size}px`,
+        width: 'auto',
+        maxWidth: '100%',
+        objectFit: 'contain',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        ...style,
+      }}
+      {...props}
+    />
   );
 }
 

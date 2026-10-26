@@ -37,8 +37,10 @@ export default function Login() {
   return (
     <div className="login-page">
       <form className="login-card" onSubmit={submit}>
-        <div className="login-logo"><Logo size={56} /></div>
-        <h1>Socialora</h1>
+        <div className="login-logo">
+          <Logo size={46} />
+          <h1 className="sr-only">Socialora</h1>
+        </div>
         <p className="muted">Masuk untuk mengakses workspace konten</p>
 
         <div className="seg">
@@ -73,7 +75,7 @@ export default function Login() {
 
         <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>
           Belum punya akun?{' '}
-          <Link to="/register" style={{ color: '#7c1fe0', fontWeight: 600 }}>
+          <Link to="/register" style={{ color: '#fe3f51', fontWeight: 600 }}>
             Daftar sekarang
           </Link>
         </div>
