@@ -82,7 +82,7 @@ app.use(async (_req, res, next) => {
   for (const k of ['DATABASE_URL', 'JWT_SECRET', 'ADMIN_PASSWORD']) {
     if (!process.env[k]) {
       return res.status(500).json({
-        error: `Environment variable ${k} belum diatur di Vercel (buka Settings > Environment Variables di Vercel).`,
+        error: `Environment variable ${k} belum diatur.`,
       });
     }
   }

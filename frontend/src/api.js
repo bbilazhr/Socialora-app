@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || '/api';
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 const KEY = 'socialora_token';
 
 export const getToken = () => localStorage.getItem(KEY) || sessionStorage.getItem(KEY);
@@ -31,7 +31,6 @@ async function req(path, { method = 'GET', body } = {}) {
   try {
     data = JSON.parse(text);
   } catch {
-    // If response is HTML or plain text, extract readable text
     const clean = text
       .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
       .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
