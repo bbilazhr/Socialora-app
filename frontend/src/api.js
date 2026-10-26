@@ -24,12 +24,24 @@ async function req(path, { method = 'GET', body } = {}) {
   } catch {
     throw new Error('Tidak bisa terhubung ke server. Pastikan backend sudah berjalan.');
   }
-  const data = await res.json().catch(() => ({}));
+  // Parse response
+  let data = {};
+  const text = await res.text();
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = { error: text && text.length < 200 ? text : 'Terjadi kesalahan di server' };
+  }
+
   if (res.status === 401 && token) {
     clearToken();
     window.location.href = '/login';
   }
-  if (!res.ok) throw new Error(data.error || 'Terjadi kesalahan');
+
+  if (!res.ok) {
+    throw new Error(data.error || data.message || `Terjadi kesalahan (${res.status})`);
+  }
+
   return data;
 }
 

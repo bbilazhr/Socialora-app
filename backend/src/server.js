@@ -45,6 +45,10 @@ export function ensureInit() {
   return initPromise;
 }
 
+// Health check (always available)
+app.get('/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
+app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'Socialora', vercel: !!process.env.VERCEL }));
+
 // Middleware to check required env variables and ensure DB is ready
 app.use(async (_req, res, next) => {
   for (const k of ['DATABASE_URL', 'JWT_SECRET', 'ADMIN_PASSWORD']) {
@@ -61,10 +65,6 @@ app.use(async (_req, res, next) => {
     return res.status(500).json({ error: 'Gagal terhubung ke database: ' + err.message });
   }
 });
-
-// Health check
-app.get('/health', (_req, res) => res.json({ ok: true, app: 'Socialora' }));
-app.get('/api/health', (_req, res) => res.json({ ok: true, app: 'Socialora' }));
 
 // Routes (support both with /api and without /api)
 app.use('/api/auth', authRoutes);
